@@ -75,7 +75,7 @@ export function Chat({
         },
       ]);
 
-      const response = await fetch("api/research", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH}/api/research`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -204,15 +204,15 @@ export function Chat({
       setInitialQuery(userInput);
 
       try {
-        const response = await fetch("api/feedback", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            query: userInput,
-            numQuestions: 3,
-            modelId: config.modelId,
-          }),
-        });
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH}/api/feedback`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              query: userInput,
+              numQuestions: 3,
+              modelId: config.modelId,
+            }),
+          });
         const data = await response.json();
         const questions: string[] = data.questions || [];
         setMessages((prev) => {
