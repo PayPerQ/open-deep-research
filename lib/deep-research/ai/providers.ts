@@ -5,25 +5,26 @@ import { RecursiveCharacterTextSplitter } from './text-splitter';
 
 // Model Display Information
 export const AI_MODEL_DISPLAY = {
-  'gpt-4o': {
-    id: 'gpt-4o',
-    name: 'GPT-4o',
-    logo: 'providers/openai.webp',
-    vision: true,
-  },
-  'gpt-4o-mini': {
-    id: 'gpt-4o-mini',
-    name: 'GPT-4o mini',
-    logo: 'providers/openai.webp',
-    vision: true,
-  },
-  'o3-mini': {
-    id: 'o3-mini',
-    name: 'o3 mini',
-    logo: 'providers/openai.webp',
-    vision: false,
-  },
-} as const;
+    'gpt-4o': {
+      id: 'gpt-4o',
+      name: 'GPT-4o',
+      logo: `${process.env.NEXT_PUBLIC_BASE_PATH}/providers/openai.webp`,
+      vision: true,
+    },
+    'gpt-4o-mini': {
+      id: 'gpt-4o-mini',
+      name: 'GPT-4o mini',
+      logo: `${process.env.NEXT_PUBLIC_BASE_PATH}/providers/openai.webp`,
+      vision: true,
+    },
+    'o3-mini': {
+      id: 'o3-mini',
+      name: 'o3 mini',
+      logo: `${process.env.NEXT_PUBLIC_BASE_PATH}/providers/openai.webp`,
+      vision: false,
+    },
+  } as const;
+  
 
 export type AIModel = keyof typeof AI_MODEL_DISPLAY;
 export type AIModelDisplayInfo = (typeof AI_MODEL_DISPLAY)[AIModel];
