@@ -3,11 +3,5 @@
     "app/api/**/*": {
       "maxDuration": 300
     }
-  },
-  "rewrites": [
-    {
-      "source": "/deepresearch/:path*",
-      "destination": "/:path*"
-    }
-  ]
+  }
 }
