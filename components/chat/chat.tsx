@@ -75,7 +75,7 @@ export function Chat({
         },
       ]);
 
-      const response = await fetch("/api/research", {
+      const response = await fetch("api/research", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -204,7 +204,7 @@ export function Chat({
       setInitialQuery(userInput);
 
       try {
-        const response = await fetch("/api/feedback", {
+        const response = await fetch("api/feedback", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
