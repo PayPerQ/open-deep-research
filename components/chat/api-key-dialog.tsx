@@ -102,7 +102,7 @@ export function ApiKeyDialog({ show, onClose, onSuccess }: ApiKeyDialogProps) {
               <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 sm:p-4">
                 <h4 className="font-medium text-blue-900 flex items-center mb-2 text-sm">
                   <Image
-                    src="providers/openai.webp"
+                    src={`${process.env.NEXT_PUBLIC_BASE_PATH}/providers/openai.webp`}
                     alt="OpenAI Logo"
                     width={16}
                     height={16}
