@@ -1,8 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
-    basePath: '/deepresearch', // <-- This line added
+    basePath: '/deepresearch',
   };
   
   module.exports = nextConfig;
-  
