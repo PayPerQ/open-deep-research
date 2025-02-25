@@ -35,7 +35,7 @@ export function ApiKeyDialog({ show, onClose, onSuccess }: ApiKeyDialogProps) {
     const handleApiKeySubmit = async () => {
         if (!openaiKey || !firecrawlKey) return;
         setLoading(true);
-        const res = await fetch("api/keys", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH}/api/keys`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ openaiKey, firecrawlKey }),

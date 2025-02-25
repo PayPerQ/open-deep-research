@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  basePath: '/deepresearch',
+  // Removing basePath to fix proxy issue
+  // basePath: '/deepresearch',
   reactStrictMode: true,
 };
 
