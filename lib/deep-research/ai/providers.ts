@@ -2,26 +2,25 @@ import { createOpenAI } from '@ai-sdk/openai';
 import { getEncoding } from 'js-tiktoken';
 
 import { RecursiveCharacterTextSplitter } from './text-splitter';
-import { getImagePath } from '@/lib/utils';
 
 // Model Display Information
 export const AI_MODEL_DISPLAY = {
     'gpt-4o': {
       id: 'gpt-4o',
       name: 'GPT-4o',
-      logo: getImagePath('/providers/openai.webp'),
+      logo: '/providers/openai.webp',
       vision: true,
     },
     'gpt-4o-mini': {
       id: 'gpt-4o-mini',
       name: 'GPT-4o mini',
-      logo: getImagePath('/providers/openai.webp'),
+      logo: '/providers/openai.webp',
       vision: true,
     },
     'o3-mini': {
       id: 'o3-mini',
       name: 'o3 mini',
-      logo: getImagePath('/providers/openai.webp'),
+      logo: '/providers/openai.webp',
       vision: false,
     },
   } as const;

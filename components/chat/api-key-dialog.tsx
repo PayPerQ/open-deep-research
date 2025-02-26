@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { getApiBasePath, getImagePath } from "@/lib/utils";
+import { getApiBasePath } from "@/lib/utils";
 import {
     LockIcon,
     KeyIcon,
@@ -108,7 +108,7 @@ export function ApiKeyDialog({ show, onClose, onSuccess }: ApiKeyDialogProps) {
                             <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 sm:p-4">
                                 <h4 className="font-medium text-blue-900 flex items-center mb-2 text-sm">
                                     <Image
-                                        src={getImagePath('/providers/openai.webp')}
+                                        src='/providers/openai.webp'
                                         alt="OpenAI Logo"
                                         width={16}
                                         height={16}

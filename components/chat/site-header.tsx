@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getImagePath } from "@/lib/utils";
 
 export function Header() {
     return (
@@ -13,7 +12,7 @@ export function Header() {
                         target="_blank"
                     >
                         <Image
-                            src={getImagePath('/logo-text.png')}
+                            src='/logo-text.png'
                             alt="Anotherwrapper Logo"
                             width={400}
                             height={100}
