@@ -2,7 +2,6 @@
 const nextConfig = {
   reactStrictMode: true,
   assetPrefix: '/deepresearch',
-  basePath: '/deepresearch',
 
 };
 
