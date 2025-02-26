@@ -48,3 +48,16 @@ export function getApiBasePath() {
   // When running standalone or directly accessed
   return '';
 }
+
+export function getImagePath(path: string): string {
+  // Remove leading slash if present
+  const cleanPath = path.startsWith('/') ? path.substring(1) : path;
+  
+  // When in development or running standalone, use standard path
+  if (process.env.NODE_ENV !== 'production') {
+    return `/${cleanPath}`;
+  }
+  
+  // In production, use the full URL with the deepresearch domain
+  return `https://deepresearch.ppq.ai/${cleanPath}`;
+}
