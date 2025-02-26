@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { getApiBasePath } from "@/lib/utils";
 import {
     LockIcon,
     KeyIcon,
@@ -35,7 +36,7 @@ export function ApiKeyDialog({ show, onClose, onSuccess }: ApiKeyDialogProps) {
     const handleApiKeySubmit = async () => {
         if (!openaiKey || !firecrawlKey) return;
         setLoading(true);
-        const res = await fetch('/api/keys', {
+        const res = await fetch(`${getApiBasePath()}/api/keys`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ openaiKey, firecrawlKey }),

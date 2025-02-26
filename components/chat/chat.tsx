@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { BrainCircuitIcon, GithubIcon, PanelRightOpen } from "lucide-react";
 
 import { useScrollToBottom } from "@/lib/hooks/use-scroll-to-bottom";
+import { getApiBasePath } from "@/lib/utils";
 
 import DownloadTxtButton from "./download-txt";
 import { MultimodalInput } from "./input";
@@ -75,7 +76,7 @@ export function Chat({
         },
       ]);
 
-      const response = await fetch('/api/research', {
+      const response = await fetch(`${getApiBasePath()}/api/research`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -204,7 +205,7 @@ export function Chat({
       setInitialQuery(userInput);
 
       try {
-        const response = await fetch('/api/feedback', {
+        const response = await fetch(`${getApiBasePath()}/api/feedback`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

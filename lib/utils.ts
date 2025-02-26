@@ -39,3 +39,12 @@ export function formatTimestamp(timestamp: number): string {
 
   return `${dateString} at ${timeString}`;
 }
+
+export function getApiBasePath() {
+  // When running via the main app's proxy at /deepresearch
+  if (typeof window !== 'undefined' && window.location.pathname.startsWith('/deepresearch')) {
+    return '/deepresearch';
+  }
+  // When running standalone or directly accessed
+  return '';
+}

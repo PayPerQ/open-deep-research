@@ -15,6 +15,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
+import { getApiBasePath } from "@/lib/utils";
 import {
   availableModels,
   type AIModelDisplayInfo,
@@ -64,7 +65,7 @@ export function MultimodalInput({
   // Check for keys using the consolidated endpoint
   useEffect(() => {
     const checkKeys = async () => {
-        const res = await fetch('/api/keys');
+        const res = await fetch(`${getApiBasePath()}/api/keys`);
       const data = await res.json();
       setHasKeys(data.keysPresent);
       if (!data.keysPresent && enableApiKeys) {
@@ -81,7 +82,7 @@ export function MultimodalInput({
     if (!window.confirm("Are you sure you want to remove your API keys?"))
       return;
     try {
-        const res = await fetch('/api/keys', {
+        const res = await fetch(`${getApiBasePath()}/api/keys`, {
             method: "DELETE",
           });
       if (res.ok) {
