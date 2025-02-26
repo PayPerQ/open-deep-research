@@ -2,6 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   assetPrefix: 'https://deepresearch.ppq.ai',
+  basePath: 'https://deepresearch.ppq.ai',
 
 };
 
