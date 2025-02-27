@@ -12,7 +12,7 @@ export function Header() {
                         target="_blank"
                     >
                         <Image
-                            src='/logo-text.png'
+                            src={`${process.env.NEXT_PUBLIC_BASE_URL}/logo-text.png`}
                             alt="Anotherwrapper Logo"
                             width={400}
                             height={100}
