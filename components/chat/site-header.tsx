@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import logoText from '@/public/logo-text.png';
+
 
 export function Header() {
     return (
@@ -12,7 +14,7 @@ export function Header() {
                         target="_blank"
                     >
                         <Image
-                            src='/logo-text.png'
+                            src={logoText}
                             alt="Anotherwrapper Logo"
                             width={400}
                             height={100}
