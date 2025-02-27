@@ -206,6 +206,7 @@ export function MultimodalInput({
               width={16}
               height={16}
               className="mr-1 rounded-sm"
+              unoptimized
             />
             {selectedModel.name}
             <ChevronDown
@@ -241,6 +242,7 @@ export function MultimodalInput({
                       width={16}
                       height={16}
                       className="rounded-sm"
+                      unoptimized
                     />
                     {model.name}
                   </button>
@@ -325,6 +327,7 @@ export function MultimodalInput({
               width={16}
               height={16}
               className="mr-1 rounded-sm"
+              unoptimized
             />
             {selectedModel.name}
             <ChevronDown
@@ -360,6 +363,7 @@ export function MultimodalInput({
                       width={16}
                       height={16}
                       className="rounded-sm"
+                      unoptimized
                     />
                     {model.name}
                   </button>

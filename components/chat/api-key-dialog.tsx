@@ -113,6 +113,7 @@ export function ApiKeyDialog({ show, onClose, onSuccess }: ApiKeyDialogProps) {
                                         width={16}
                                         height={16}
                                         className="mr-2"
+                                        unoptimized
                                     />
                                     OpenAI API Key
                                 </h4>
