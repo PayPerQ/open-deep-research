@@ -310,7 +310,7 @@ export function MultimodalInput({
               </>
             )
           ) : (
-            <span className="text-xs text-green-600">Using .env API keys</span>
+            <span className="text-xs text-green-600"></span>
           )}
         </button>
 
