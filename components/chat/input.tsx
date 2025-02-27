@@ -265,7 +265,7 @@ export function MultimodalInput({
                 </span>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Breadth</p>
+                <p>Breadth controls the number of SERP (Search Engine Result Page) queries generated and used for research. It essentially determines how wide your research net is cast</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -289,7 +289,7 @@ export function MultimodalInput({
                 </span>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Depth</p>
+                <p>Depth controls the amount of reasoning steps taken to answer your query. It essentially determines how deep your research goes.</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -410,7 +410,7 @@ export function MultimodalInput({
                   </span>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Breadth</p>
+                  <p>Breadth controls the number of SERP (Search Engine Result Page) queries generated and used for research. It essentially determines how wide your research net is cast</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -434,7 +434,7 @@ export function MultimodalInput({
                   </span>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Depth</p>
+                  <p>Depth controls the amount of reasoning steps taken to answer your query. It essentially determines how deep your research goes.</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
