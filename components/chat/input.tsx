@@ -9,6 +9,7 @@ import {
   CheckCircleIcon,
   ChevronDown,
   DownloadIcon,
+  InfoIcon,
   Settings2,
   XCircleIcon,
 } from "lucide-react";
@@ -258,7 +259,10 @@ export function MultimodalInput({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <span className="text-xs text-muted-foreground">B:{breadth}</span>
+                <span className="text-xs text-muted-foreground flex items-center gap-1">
+                  B:{breadth}
+                  <InfoIcon className="h-3 w-3 text-muted-foreground/70" />
+                </span>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Breadth</p>
@@ -279,7 +283,10 @@ export function MultimodalInput({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <span className="text-xs text-muted-foreground">D:{depth}</span>
+                <span className="text-xs text-muted-foreground flex items-center gap-1">
+                  D:{depth}
+                  <InfoIcon className="h-3 w-3 text-muted-foreground/70" />
+                </span>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Depth</p>
@@ -397,8 +404,9 @@ export function MultimodalInput({
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-xs text-muted-foreground flex items-center gap-1">
                     Breadth: {breadth}
+                    <InfoIcon className="h-3 w-3 text-muted-foreground/70" />
                   </span>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -420,8 +428,9 @@ export function MultimodalInput({
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-xs text-muted-foreground flex items-center gap-1">
                     Depth: {depth}
+                    <InfoIcon className="h-3 w-3 text-muted-foreground/70" />
                   </span>
                 </TooltipTrigger>
                 <TooltipContent>
