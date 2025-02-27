@@ -17,8 +17,8 @@ export function Header() {
                     >
                         <div className="flex items-center">
                             <Image
-                                src='https://deepresearch.ppq.ai/PayPerQLogo.png'
-                                alt="Anotherwrapper Logo"
+                                src='https://deepresearch.ppq.ai/flame2.png'
+                                alt="ppq Logo"
                                 width={400}
                                 height={100}
                                 className="w-48"
