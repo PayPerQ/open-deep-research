@@ -13,7 +13,7 @@ export function Header() {
                         target="_blank"
                     >
                         <Image
-                            src='https://deepresearch.ppq.ai/logo-text.png'
+                            src='https://deepresearch.ppq.ai/PayPerQLogo.png'
                             alt="Anotherwrapper Logo"
                             width={400}
                             height={100}

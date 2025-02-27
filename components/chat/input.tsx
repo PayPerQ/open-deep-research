@@ -15,6 +15,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { getApiBasePath } from "@/lib/utils";
 import {
   availableModels,
@@ -254,7 +255,16 @@ export function MultimodalInput({
 
         {/* Research Controls */}
         <div className="flex items-center gap-2">
-          <span className="text-xs text-muted-foreground">B:{breadth}</span>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="text-xs text-muted-foreground">B:{breadth}</span>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Breadth</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           <Slider
             value={[breadth]}
             min={2}
@@ -266,7 +276,16 @@ export function MultimodalInput({
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-xs text-muted-foreground">D:{depth}</span>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="text-xs text-muted-foreground">D:{depth}</span>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Depth</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           <Slider
             value={[depth]}
             min={1}
@@ -375,9 +394,18 @@ export function MultimodalInput({
 
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground">
-              Breadth: {breadth}
-            </span>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="text-xs text-muted-foreground">
+                    Breadth: {breadth}
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Breadth</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <Slider
               value={[breadth]}
               min={2}
@@ -389,9 +417,18 @@ export function MultimodalInput({
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground">
-              Depth: {depth}
-            </span>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="text-xs text-muted-foreground">
+                    Depth: {depth}
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Depth</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <Slider
               value={[depth]}
               min={1}
