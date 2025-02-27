@@ -18,6 +18,7 @@ export function Header() {
                             width={400}
                             height={100}
                             className="w-48"
+                            unoptimized
                         />
                     </Link>
                 </div>
