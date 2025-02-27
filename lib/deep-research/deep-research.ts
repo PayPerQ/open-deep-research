@@ -32,7 +32,7 @@ const getFirecrawl = (apiKey?: string) =>
 // Helper function to format progress messages consistently
 const formatProgress = {
   generating: (count: number, query: string) =>
-    `Generating up to ${count} SERP queries\n${query}`,
+    `Generating up to ${count} Search Engine Result Page (SERP) queries\n${query}`,
 
   created: (count: number, queries: string) =>
     `Created ${count} SERP queries\n${queries}`,
