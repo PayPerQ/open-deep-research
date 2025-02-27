@@ -1,5 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Orbitron } from "next/font/google";
+
+const orbitron = Orbitron({ subsets: ["latin"] });
 
 
 export function Header() {
@@ -12,14 +15,21 @@ export function Header() {
                         href="https://anotherwrapper.com"
                         target="_blank"
                     >
-                        <Image
-                            src='https://deepresearch.ppq.ai/PayPerQLogo.png'
-                            alt="Anotherwrapper Logo"
-                            width={400}
-                            height={100}
-                            className="w-48"
-                            unoptimized
-                        />
+                        <div className="flex items-center">
+                            <Image
+                                src='https://deepresearch.ppq.ai/PayPerQLogo.png'
+                                alt="Anotherwrapper Logo"
+                                width={400}
+                                height={100}
+                                className="w-48"
+                                unoptimized
+                            />
+                            <h1
+                              className={`${orbitron.className} text-gray-900 dark:text-white text-2xl font-extrabold`}
+                            >
+                              PayPerQ
+                            </h1>
+                        </div>
                     </Link>
                 </div>
             </header>
