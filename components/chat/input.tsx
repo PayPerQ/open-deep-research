@@ -189,7 +189,7 @@ export function MultimodalInput({
               </>
             )
           ) : (
-            
+            <span className="text-xs text-green-600"></span>
           )}
         </button>
 
