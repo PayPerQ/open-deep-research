@@ -1,7 +1,6 @@
-import { generateObject } from 'ai';
 import { z } from 'zod';
 
-import { createModel, type AIModel } from './ai/providers';
+import { createModel, type AIModel, generateObject } from './ai/providers';
 import { systemPrompt } from './prompt';
 
 export async function generateFeedback({
@@ -30,5 +29,13 @@ export async function generateFeedback({
     }),
   });
 
-  return userFeedback.object.questions.slice(0, numQuestions);
+  // Handle different response formats
+  const questions = userFeedback.object.questions || userFeedback.object.follow_up_questions;
+  
+  if (!questions) {
+    console.error('No questions found in response:', userFeedback);
+    throw new Error('No questions found in API response');
+  }
+  
+  return questions.slice(0, numQuestions);
 }

@@ -39,7 +39,6 @@ export async function POST(req: NextRequest) {
       });
 
       console.log("\n✅ [FEEDBACK ROUTE] === Success ===");
-      console.log("Generated Questions:", questions);
       console.log("Number of Questions Generated:", questions.length);
 
       return NextResponse.json({ questions });

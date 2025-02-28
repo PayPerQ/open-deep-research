@@ -31,7 +31,6 @@ export async function POST(req: NextRequest) {
     }
 
     console.log("\n🔬 [RESEARCH ROUTE] === Request Started ===");
-    console.log("Query:", query);
     console.log("Model ID:", modelId);
     console.log("Configuration:", {
       breadth,

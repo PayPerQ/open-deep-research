@@ -109,24 +109,24 @@ export function ApiKeyDialog({ show, onClose, onSuccess }: ApiKeyDialogProps) {
                                 <h4 className="font-medium text-blue-900 flex items-center mb-2 text-sm">
                                     <Image
                                         src='/providers/openai.webp'
-                                        alt="OpenAI Logo"
+                                        alt="PPQ AI Logo"
                                         width={16}
                                         height={16}
                                         className="mr-2"
                                         unoptimized
                                     />
-                                    OpenAI API Key
+                                    PPQ API Key
                                 </h4>
                                 <p className="text-xs text-blue-700">
                                     Powers our advanced language models for
                                     research analysis and synthesis.
                                     <a
-                                        href="https://platform.openai.com/api-keys"
+                                        href="https://api.ppq.ai"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="block mt-2 text-blue-600 hover:text-blue-800 underline"
                                     >
-                                        Get your OpenAI key →
+                                        Get your PPQ AI key →
                                     </a>
                                 </p>
                             </div>
@@ -155,7 +155,7 @@ export function ApiKeyDialog({ show, onClose, onSuccess }: ApiKeyDialogProps) {
                     <div className="space-y-3 sm:space-y-4">
                         <div>
                             <label className="text-sm font-medium text-zinc-700 mb-1 block">
-                                OpenAI API Key
+                                PPQ AI API Key
                             </label>
                             <div className="relative">
                                 <Input
@@ -172,8 +172,7 @@ export function ApiKeyDialog({ show, onClose, onSuccess }: ApiKeyDialogProps) {
                                 </div>
                             </div>
                             <p className="mt-1 text-xs text-zinc-500">
-                                Starts with 'sk-' and contains about 50
-                                characters
+                                Starts with 'sk-' and contains alphanumeric characters
                             </p>
                         </div>
 
