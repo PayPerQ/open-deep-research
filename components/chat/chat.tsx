@@ -360,27 +360,6 @@ export function Chat({
                     research capabilities. Ask any question to generate a
                     comprehensive report.
                   </motion.p>
-
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.4 }}
-                    className="pt-2"
-                  >
-                    <a
-                      href="https://github.com/fdarkaou/open-deep-research"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center px-2 py-1 md:px-6 md:py-2.5 text-xs md:text-sm font-medium 
-                        bg-gradient-to-r from-primary/10 to-primary/5 hover:from-primary/15 hover:to-primary/10
-                        text-primary hover:text-primary/90 rounded-full transition-all duration-300
-                        shadow-[0_0_0_1px_rgba(var(--primary),0.1)] hover:shadow-[0_0_0_1px_rgba(var(--primary),0.2)]
-                        hover:scale-[1.02]"
-                    >
-                      <GithubIcon className="w-4 h-4 mr-1" />
-                      View source code
-                    </a>
-                  </motion.div>
                 </div>
               </motion.div>
             </div>
