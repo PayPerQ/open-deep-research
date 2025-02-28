@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  assetPrefix: 'https://deepresearch.ppq.ai'
+  assetPrefix: process.env.NODE_ENV === 'production' ? 'https://deepresearch.ppq.ai' : undefined
 
 };
 
