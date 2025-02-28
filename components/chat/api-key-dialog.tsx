@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { getApiBasePath } from "@/lib/utils";
 import {
@@ -32,15 +32,45 @@ export function ApiKeyDialog({ show, onClose, onSuccess }: ApiKeyDialogProps) {
     const [openaiKey, setOpenaiKey] = useState("");
     const [firecrawlKey, setFirecrawlKey] = useState("");
     const [loading, setLoading] = useState(false);
+    const [virtualApiKey, setVirtualApiKey] = useState("");
+    const [usePpqApi, setUsePpqApi] = useState(false);
+
+    // Load PPQ settings from localStorage on component mount
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const savedVirtualApiKey = localStorage.getItem('virtual_api_key');
+            const savedUsePpqApi = localStorage.getItem('use_ppq_api') === 'true';
+            
+            if (savedVirtualApiKey) {
+                setVirtualApiKey(savedVirtualApiKey);
+            }
+            
+            if (savedUsePpqApi) {
+                setUsePpqApi(savedUsePpqApi);
+            }
+        }
+    }, []);
 
     const handleApiKeySubmit = async () => {
         if (!openaiKey || !firecrawlKey) return;
         setLoading(true);
+        
+        // Save PPQ settings to localStorage if provided
+        if (virtualApiKey) {
+            localStorage.setItem('virtual_api_key', virtualApiKey);
+            localStorage.setItem('use_ppq_api', usePpqApi ? 'true' : 'false');
+        } else {
+            // Clear PPQ settings if not provided
+            localStorage.removeItem('virtual_api_key');
+            localStorage.removeItem('use_ppq_api');
+        }
+        
         const res = await fetch(`${getApiBasePath()}/api/keys`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ openaiKey, firecrawlKey }),
         });
+        
         if (res.ok) {
             onClose(false);
             onSuccess();
@@ -153,6 +183,48 @@ export function ApiKeyDialog({ show, onClose, onSuccess }: ApiKeyDialogProps) {
                 </DialogHeader>
                 <div className="space-y-4 sm:space-y-6 py-2 sm:py-4">
                     <div className="space-y-3 sm:space-y-4">
+                        {/* PPQ API Integration */}
+                        <div className="bg-purple-50 border border-purple-100 rounded-lg p-3 sm:p-4 mb-4">
+                            <h4 className="font-medium text-purple-900 flex items-center mb-2 text-sm">
+                                <svg viewBox="0 0 24 24" width="16" height="16" className="mr-2" fill="currentColor">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                                </svg>
+                                PPQ API Integration (Optional)
+                            </h4>
+                            <p className="text-xs text-purple-700 mb-2">
+                                Use PayPerQ API for better performance and cost control.
+                            </p>
+                            <div className="mt-2">
+                                <label className="text-sm font-medium text-purple-700 mb-1 block">
+                                    Virtual API Key
+                                </label>
+                                <div className="relative">
+                                    <Input
+                                        type="password"
+                                        value={virtualApiKey}
+                                        onChange={(e) => setVirtualApiKey(e.target.value)}
+                                        placeholder="sk-..."
+                                        className="pr-10 font-mono text-sm bg-white/50 border-purple-200 focus:border-purple-400 focus:ring-purple-400 h-9 sm:h-10"
+                                    />
+                                </div>
+                                <p className="mt-1 text-xs text-purple-500">
+                                    PayPerQ API key - stored in your browser&apos;s localStorage
+                                </p>
+                            </div>
+                            <div className="mt-3 flex items-center">
+                                <input
+                                    type="checkbox"
+                                    id="use-ppq-api"
+                                    checked={usePpqApi}
+                                    onChange={(e) => setUsePpqApi(e.target.checked)}
+                                    className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-purple-300 rounded"
+                                />
+                                <label htmlFor="use-ppq-api" className="ml-2 block text-sm text-purple-700">
+                                    Use PPQ API for research instead of standard OpenAI
+                                </label>
+                            </div>
+                        </div>
+                        
                         <div>
                             <label className="text-sm font-medium text-zinc-700 mb-1 block">
                                 OpenAI API Key
