@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { Message } from "ai";
 import { motion } from "framer-motion";
 import { BrainCircuitIcon, GithubIcon, PanelRightOpen } from "lucide-react";
@@ -27,6 +28,71 @@ export function Chat({
 
   // New state to store the final report text
   const [finalReport, setFinalReport] = useState<string | null>(null);
+  
+  // Function to save report to localStorage
+  const saveReportToLocalStorage = (report: string, userQuery: string) => {
+    // Generate a unique ID
+    const id = uuidv4();
+    
+    // Create current date string
+    const currentDate = new Date().toISOString();
+    
+    // Create conversation object
+    const newConversation = {
+      id,
+      name: userQuery.substring(0, 20) + (userQuery.length > 20 ? "..." : ""),
+      messages: [
+        {
+          role: "user",
+          content: userQuery,
+          initImage: "",
+          image_gen_params: {},
+          reasoning_effort: "medium"
+        },
+        {
+          role: "assistant",
+          content: report,
+          citations: []
+        }
+      ],
+      model: {
+        id: "litellm/claude-3.7-sonnet",
+        name: "Claude 3.7 Sonnet",
+        icon: "/claude-icon.svg",
+        type: "text generation",
+        visionEnabled: true,
+        context_window: 200000,
+        label: "World's most intelligent",
+        class: "recommended_chat_models",
+        isExtendedThinking: true,
+        details: "The new Claude 3.7 Sonnet delivers better-than-Opus capabilities, faster-than-Sonnet speeds, at the same Sonnet prices. Sonnet is particularly good at:\n\n- Coding: New Sonnet scores ~49% on SWE-Bench Verified, higher than the last best score, and without any fancy prompt scaffolding\n- Data science: Augments human data science expertise; navigates unstructured data while using multiple tools for insights\n- Visual processing: excelling at interpreting charts, graphs, and images, accurately transcribing text to derive insights beyond just the text alone\n- Agentic tasks: exceptional tool use, making it great at agentic tasks (i.e. complex, multi-step problem solving tasks that require engaging with other systems)\n\n#multimodal"
+      },
+      prompt: "\n  You are a friendly, helpful AI assistant.\n  Here is the current date: " + new Date().toString() + ".\n  # General Instructions\n  - Use markdown to format paragraphs, lists, tables, and quotes whenever possible.\n  - Use headings level 2 and 3 to separate sections of your response, like \"## Header\", but NEVER start an answer with a heading or title of any kind.\n  - Use single new lines for lists and double new lines for paragraphs.\n  - Use markdown to render images given in the search results.\n  - NEVER write URLs or links.\n\n  ## Coding\n\n  You MUST use markdown code blocks to write code, specifying the language for syntax highlighting, for example ```bash or```python\n  If the user's query asks for code, you should write the code first and then explain it.\n\n  ## Science and Math\n\n  If the user query is about some simple calculation, only answer with the final result.\n  Follow these rules for writing formulas:\n\n  - Always use \\( and\\) for inline formulas and\\[ and\\] for blocks, for example\\(x^4 = x - 3 \\)\n  - To cite a formula add citations to the end, for example\\[ \\sin(x) \\] [1][2] or \\(x^2-2\\) [4].\n  - Never use $ or $$ to render LaTeX, even if it is present in the user query.\n  - Never use unicode to render math expressions, ALWAYS use LaTeX.\n  - Never use the \\label instruction for LaTeX.\n  - In case of dollar sign as currency, make sure to escape it.\n  ",
+      temperature: 1,
+      folderId: null,
+      created_at: currentDate,
+      dataSource: null
+    };
+    
+    // Get existing conversations or create a new array
+    let conversationHistory = [];
+    try {
+      const existingHistory = localStorage.getItem("conversationHistory");
+      if (existingHistory) {
+        conversationHistory = JSON.parse(existingHistory);
+      }
+    } catch (error) {
+      console.error("Error parsing conversation history:", error);
+    }
+    
+    // Add new conversation to the array
+    conversationHistory.unshift(newConversation); // Add to the beginning
+    
+    // Save back to localStorage
+    localStorage.setItem("conversationHistory", JSON.stringify(conversationHistory));
+    
+    console.log("Research report successfully saved to conversationHistory in localStorage with ID:", id);
+  };
 
   // States for interactive feedback workflow
   const [stage, setStage] = useState<"initial" | "feedback" | "researching">(
@@ -134,6 +200,9 @@ export function Chat({
                     content: event.report,
                   },
                 ]);
+                
+                // Save the report to localStorage
+                saveReportToLocalStorage(event.report, query);
               } else if (event.type === "report_part") {
                 reportParts.push(event.content);
               }
