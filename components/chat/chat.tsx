@@ -318,7 +318,7 @@ export function Chat({
       }
     } else if (stage === "feedback") {
       // In feedback stage, combine the initial query and follow-up answers
-      const combined = `Initial Query: ${initialQuery}\nFollow-up Answers:\n${userInput}`;
+      const combined = `Deep Research Topic: ${initialQuery}\nFollow-up Answers:\n${userInput}`;
       setStage("researching");
       try {
         await sendResearchQuery(combined, config);
