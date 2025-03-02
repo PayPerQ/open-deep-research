@@ -23,7 +23,6 @@
     "lodash-es": "^4.17.21",
     "lucide-react": "^0.378.0",
     "next": "^14.2.8",
-    "open-deep-research": "link:",
     "p-limit": "^6.2.0",
     "postcss": "8.4.33",
     "react": "^18.3.1",
