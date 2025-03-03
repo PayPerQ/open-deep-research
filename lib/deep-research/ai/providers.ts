@@ -40,9 +40,9 @@ export type AIModelDisplayInfo = (typeof AI_MODEL_DISPLAY)[AIModel];
 export const availableModels = Object.values(AI_MODEL_DISPLAY);
 
 // Custom client implementation
-const createPPQClient = (apiKey?: string) => {
-  // Try to get the API key from the parameter first, then from localStorage
-  const finalApiKey = apiKey || getVirtualApiKey();
+const createPPQClient = (_apiKey?: string) => {
+  // Always get the API key from localStorage, ignoring any parameters
+  const finalApiKey = getVirtualApiKey();
   return async (messages: any[], options?: any) => {
     const requestData = {
       model: options?.model || 'gpt4o',
@@ -210,9 +210,9 @@ export async function generateObject({
 }
 
 // Create model instances with configurations
-export function createModel(modelId: AIModel, apiKey?: string) {
-  // Only use the provided API key or get from localStorage - no fallbacks to environment variables
-  const ppqClient = createPPQClient(apiKey);
+export function createModel(modelId: AIModel, _apiKey?: string) {
+  // Always use the virtual_api_key from localStorage - ignoring any provided API key
+  const ppqClient = createPPQClient();
   
   return (messages: any[], options?: any) => {
     return ppqClient(messages, {
