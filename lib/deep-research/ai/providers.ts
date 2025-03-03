@@ -1,10 +1,10 @@
 import { getEncoding } from 'js-tiktoken';
 
+import { getVirtualApiKey } from '@/lib/utils';
 import { RecursiveCharacterTextSplitter } from './text-splitter';
 
 // Custom implementation for PPQ.ai API
 const PPQ_API_ENDPOINT = 'https://api.ppq.ai/chat/completions';
-const PPQ_API_KEY = "sk-DzimaW-i5twlLcZiasNHxQ"; // Default API key
 
 // Helper function to create headers
 const createHeaders = (apiKey: string) => ({
@@ -40,7 +40,9 @@ export type AIModelDisplayInfo = (typeof AI_MODEL_DISPLAY)[AIModel];
 export const availableModels = Object.values(AI_MODEL_DISPLAY);
 
 // Custom client implementation
-const createPPQClient = (apiKey: string = PPQ_API_KEY) => {
+const createPPQClient = (apiKey?: string) => {
+  // Try to get the API key from the parameter first, then from localStorage
+  const finalApiKey = apiKey || getVirtualApiKey();
   return async (messages: any[], options?: any) => {
     const requestData = {
       model: options?.model || 'gpt4o',
@@ -53,7 +55,7 @@ const createPPQClient = (apiKey: string = PPQ_API_KEY) => {
     try {
       const response = await fetch(PPQ_API_ENDPOINT, {
         method: 'POST',
-        headers: createHeaders(apiKey),
+        headers: createHeaders(finalApiKey),
         body: JSON.stringify(requestData),
       });
       
@@ -209,7 +211,8 @@ export async function generateObject({
 
 // Create model instances with configurations
 export function createModel(modelId: AIModel, apiKey?: string) {
-  const ppqClient = createPPQClient(apiKey || process.env.OPENAI_API_KEY || PPQ_API_KEY);
+  // Only use the provided API key or get from localStorage - no fallbacks to environment variables
+  const ppqClient = createPPQClient(apiKey);
   
   return (messages: any[], options?: any) => {
     return ppqClient(messages, {

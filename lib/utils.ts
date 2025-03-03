@@ -48,3 +48,16 @@ export function getApiBasePath() {
   // When running standalone or directly accessed
   return '';
 }
+
+export function getVirtualApiKey(): string {
+  if (typeof window === "undefined") {
+    throw new Error("Cannot access localStorage outside of browser environment");
+  }
+  
+  const apiKey = window.localStorage.getItem("virtual_api_key");
+  if (!apiKey) {
+    throw new Error("No virtual_api_key found in localStorage");
+  }
+  
+  return apiKey;
+}
