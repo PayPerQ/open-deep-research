@@ -5,11 +5,18 @@ import { generateFeedback } from "@/lib/deep-research/feedback";
 
 export async function POST(req: NextRequest) {
   try {
-    const { query, numQuestions, modelId = "o3-mini" } = await req.json();
+    const { query, numQuestions, modelId = "o3-mini", virtualApiKey } = await req.json();
 
     // Retrieve API key(s) from secure cookies
     const openaiKey = req.cookies.get("openai-key")?.value;
     const firecrawlKey = req.cookies.get("firecrawl-key")?.value;
+
+    if (!virtualApiKey) {
+      return NextResponse.json(
+        { error: "Virtual API key is required" },
+        { status: 400 }
+      );
+    }
 
     // Add API key validation
     if (process.env.NEXT_PUBLIC_ENABLE_API_KEYS === "true") {
@@ -31,12 +38,12 @@ export async function POST(req: NextRequest) {
     });
 
     try {
-      const questions = await generateFeedback({
-        query,
-        numQuestions,
-        modelId: modelId as AIModel,
-        apiKey: openaiKey,
-      });
+        const questions = await generateFeedback({
+          query,
+          numQuestions,
+          modelId: modelId as AIModel,
+          virtualApiKey,
+        });
 
       console.log("\n✅ [FEEDBACK ROUTE] === Success ===");
       console.log("Number of Questions Generated:", questions.length);

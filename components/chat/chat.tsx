@@ -142,6 +142,14 @@ export function Chat({
         },
       ]);
 
+      // Get virtual API key from localStorage
+      let virtualApiKey = null;
+      try {
+        virtualApiKey = localStorage.getItem("virtual_api_key");
+      } catch (error) {
+        console.warn("Could not access localStorage:", error);
+      }
+
       const response = await fetch(`${getApiBasePath()}/api/research`, {
         method: "POST",
         headers: {
@@ -152,6 +160,7 @@ export function Chat({
           breadth: config.breadth,
           depth: config.depth,
           modelId: config.modelId,
+          virtualApiKey,
         }),
       });
 
@@ -274,6 +283,14 @@ export function Chat({
       setInitialQuery(userInput);
 
       try {
+        // Get virtual API key from localStorage
+        let virtualApiKey = null;
+        try {
+          virtualApiKey = localStorage.getItem("virtual_api_key");
+        } catch (error) {
+          console.warn("Could not access localStorage:", error);
+        }
+
         const response = await fetch(`${getApiBasePath()}/api/feedback`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -281,6 +298,7 @@ export function Chat({
               query: userInput,
               numQuestions: 3,
               modelId: config.modelId,
+              virtualApiKey: virtualApiKey, // Add the key to the request body
             }),
           });
         const data = await response.json();

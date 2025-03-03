@@ -7,14 +7,14 @@ export async function generateFeedback({
   query,
   numQuestions = 3,
   modelId = 'o3-mini',
-  apiKey,
+  virtualApiKey,
 }: {
   query: string;
   numQuestions?: number;
   modelId?: AIModel;
-  apiKey?: string;
+  virtualApiKey?: string;
 }) {
-  const model = createModel(modelId, apiKey);
+  const model = createModel(modelId, virtualApiKey);
 
   const userFeedback = await generateObject({
     model,

@@ -14,17 +14,24 @@ export async function POST(req: NextRequest) {
       breadth = 3,
       depth = 2,
       modelId = "o3-mini",
+      virtualApiKey,
     } = await req.json();
 
-    // Retrieve API keys from secure cookies
-    const openaiKey = req.cookies.get("openai-key")?.value;
+    // Retrieve firecrawl key from secure cookies
     const firecrawlKey = req.cookies.get("firecrawl-key")?.value;
+
+    if (!virtualApiKey) {
+      return Response.json(
+        { error: "Virtual API key is required" },
+        { status: 400 }
+      );
+    }
 
     // Add API key validation
     if (process.env.NEXT_PUBLIC_ENABLE_API_KEYS === "true") {
-      if (!openaiKey || !firecrawlKey) {
+      if (!firecrawlKey) {
         return Response.json(
-          { error: "API keys are required but not provided" },
+          { error: "FireCrawl API key is required but not provided" },
           { status: 401 }
         );
       }
@@ -37,12 +44,11 @@ export async function POST(req: NextRequest) {
       depth,
     });
     console.log("API Keys Present:", {
-      OpenAI: openaiKey ? "✅" : "❌",
       FireCrawl: firecrawlKey ? "✅" : "❌",
     });
 
     try {
-      const model = createModel(modelId as AIModel, openaiKey);
+      const model = createModel(modelId as AIModel, virtualApiKey);
       console.log("\n🤖 [RESEARCH ROUTE] === Model Created ===");
       console.log("Using Model:", modelId);
 
@@ -57,7 +63,7 @@ export async function POST(req: NextRequest) {
           const feedbackQuestions = await generateFeedback({
             query,
             modelId,
-            apiKey: openaiKey,
+            virtualApiKey,
           });
           await writer.write(
             encoder.encode(
