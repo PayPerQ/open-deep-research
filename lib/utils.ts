@@ -56,8 +56,12 @@ export function getVirtualApiKey(): string {
   
   const apiKey = window.localStorage.getItem("virtual_api_key");
   if (!apiKey) {
+    console.error("No virtual_api_key found in localStorage");
     throw new Error("No virtual_api_key found in localStorage");
   }
+  
+  // Log the key to the console for debugging
+  console.log("Retrieved virtual_api_key from localStorage:", apiKey);
   
   return apiKey;
 }
