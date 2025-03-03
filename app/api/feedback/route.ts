@@ -6,12 +6,20 @@ import { generateFeedback } from "@/lib/deep-research/feedback";
 export async function POST(req: NextRequest) {
   try {
     const { query, numQuestions, modelId = "o3-mini", virtualApiKey } = await req.json();
+    
+    console.log("\n🔑 [FEEDBACK ROUTE] === Virtual API Key Check ===");
+    console.log("Virtual API Key present:", !!virtualApiKey);
+    console.log("Virtual API Key type:", typeof virtualApiKey);
+    if (virtualApiKey) {
+      console.log("Virtual API Key length:", virtualApiKey.length);
+    }
 
     // Retrieve API key(s) from secure cookies
     const openaiKey = req.cookies.get("openai-key")?.value;
     const firecrawlKey = req.cookies.get("firecrawl-key")?.value;
 
     if (!virtualApiKey) {
+      console.error("[FEEDBACK ROUTE] No virtual API key provided in request");
       return NextResponse.json(
         { error: "Virtual API key is required" },
         { status: 400 }

@@ -287,8 +287,9 @@ export function Chat({
         let virtualApiKey = null;
         try {
           virtualApiKey = localStorage.getItem("virtual_api_key");
+          console.log("[CLIENT] Retrieved virtual_api_key from localStorage:", !!virtualApiKey);
         } catch (error) {
-          console.warn("Could not access localStorage:", error);
+          console.warn("[CLIENT] Could not access localStorage:", error);
         }
 
         const response = await fetch(`${getApiBasePath()}/api/feedback`, {

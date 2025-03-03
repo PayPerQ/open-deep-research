@@ -41,15 +41,21 @@ export const availableModels = Object.values(AI_MODEL_DISPLAY);
 
 // Custom client implementation
 const createPPQClient = (virtualApiKey?: string) => {
+  console.log("\n🔐 [PPQ CLIENT] === API Key Check ===");
+  console.log("Received virtualApiKey:", !!virtualApiKey);
+  
   // Use provided virtualApiKey or fall back to localStorage
   let finalApiKey: string;
   if (virtualApiKey) {
+    console.log("[PPQ CLIENT] Using provided virtualApiKey");
     finalApiKey = virtualApiKey;
   } else {
+    console.log("[PPQ CLIENT] No virtualApiKey provided, trying localStorage");
     try {
       finalApiKey = getVirtualApiKey();
+      console.log("[PPQ CLIENT] Successfully got key from localStorage");
     } catch (error) {
-      console.error("Failed to get virtual API key:", error);
+      console.error("[PPQ CLIENT] Failed to get virtual API key:", error);
       throw new Error("No API key available");
     }
   }

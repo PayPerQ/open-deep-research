@@ -50,18 +50,21 @@ export function getApiBasePath() {
 }
 
 export function getVirtualApiKey(): string {
+  console.log("\n🔍 [UTILS] === getVirtualApiKey Called ===");
+  
   if (typeof window === "undefined") {
+    console.error("[UTILS] Cannot access localStorage - not in browser environment");
     throw new Error("Cannot access localStorage outside of browser environment");
   }
   
   const apiKey = window.localStorage.getItem("virtual_api_key");
   if (!apiKey) {
-    console.error("No virtual_api_key found in localStorage");
+    console.error("[UTILS] No virtual_api_key found in localStorage");
     throw new Error("No virtual_api_key found in localStorage");
   }
   
-  // Log the key to the console for debugging
-  console.log("Retrieved virtual_api_key from localStorage:", apiKey);
+  console.log("[UTILS] Successfully retrieved virtual_api_key from localStorage");
+  console.log("[UTILS] Key length:", apiKey.length);
   
   return apiKey;
 }
