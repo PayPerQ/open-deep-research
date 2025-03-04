@@ -4,7 +4,7 @@ import { getVirtualApiKey } from '@/lib/utils';
 import { RecursiveCharacterTextSplitter } from './text-splitter';
 
 // Custom implementation for PPQ.ai API
-const PPQ_API_ENDPOINT = 'https://api.ppq.ai/chat/completions';
+const PPQ_API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_BASE_URL}/chat/completions`;
 
 // Helper function to create headers
 const createHeaders = (apiKey: string) => ({
