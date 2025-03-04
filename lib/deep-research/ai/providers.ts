@@ -70,6 +70,7 @@ const createPPQClient = (virtualApiKey?: string) => {
     console.log('PPQ API Request:');
     
     try {
+        
       const response = await fetch(PPQ_API_ENDPOINT, {
         method: 'POST',
         headers: createHeaders(finalApiKey),
@@ -77,7 +78,7 @@ const createPPQClient = (virtualApiKey?: string) => {
       });
       
       const responseText = await response.text();
-      console.log('PPQ API Response text:');
+      console.log('PPQ API Response text:', responseText);
       
       if (!response.ok) {
         throw new Error(`API request failed: ${response.statusText}, Response: ${responseText}`);
