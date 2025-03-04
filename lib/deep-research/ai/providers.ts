@@ -78,7 +78,7 @@ const createPPQClient = (virtualApiKey?: string) => {
       });
       
       const responseText = await response.text();
-      console.log('PPQ API Response text:', responseText);
+      console.log('PPQ API Response text: ', response);
       
       if (!response.ok) {
         throw new Error(`API request failed: ${response.statusText}, Response: ${responseText}`);
