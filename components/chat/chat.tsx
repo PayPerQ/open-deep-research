@@ -8,6 +8,7 @@ import { BrainCircuitIcon, GithubIcon, PanelRightOpen } from "lucide-react";
 
 import { useScrollToBottom } from "@/lib/hooks/use-scroll-to-bottom";
 import { getApiBasePath } from "@/lib/utils";
+import { useCreditId } from "@/lib/hooks/use-credit-id";
 
 import DownloadTxtButton from "./download-txt";
 import { MultimodalInput } from "./input";
@@ -25,6 +26,7 @@ export function Chat({
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState<ProgressStep[]>([]);
   const [containerRef, messagesEndRef] = useScrollToBottom<HTMLDivElement>();
+  const creditId = useCreditId();
 
   // New state to store the final report text
   const [finalReport, setFinalReport] = useState<string | null>(null);
@@ -142,14 +144,6 @@ export function Chat({
         },
       ]);
 
-      // Get virtual API key from localStorage
-      let virtualApiKey = null;
-      try {
-        virtualApiKey = localStorage.getItem("virtual_api_key");
-      } catch (error) {
-        console.warn("Could not access localStorage:", error);
-      }
-
       const response = await fetch(`${getApiBasePath()}/api/research`, {
         method: "POST",
         headers: {
@@ -160,7 +154,7 @@ export function Chat({
           breadth: config.breadth,
           depth: config.depth,
           modelId: config.modelId,
-          virtualApiKey,
+          creditId: creditId,
         }),
       });
 
@@ -283,15 +277,6 @@ export function Chat({
       setInitialQuery(userInput);
 
       try {
-        // Get virtual API key from localStorage
-        let virtualApiKey = null;
-        try {
-          virtualApiKey = localStorage.getItem("virtual_api_key");
-          console.log("[CLIENT] Retrieved virtual_api_key from localStorage: ", virtualApiKey);
-        } catch (error) {
-          console.warn("[CLIENT] Could not access localStorage:", error);
-        }
-
         const response = await fetch(`${getApiBasePath()}/api/feedback`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -299,7 +284,7 @@ export function Chat({
               query: userInput,
               numQuestions: 3,
               modelId: config.modelId,
-              virtualApiKey: virtualApiKey, // Add the key to the request body
+              creditId: creditId,
             }),
           });
         const data = await response.json();

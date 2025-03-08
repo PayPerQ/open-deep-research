@@ -1,6 +1,5 @@
 import { getEncoding } from 'js-tiktoken';
 
-import { getCreditId } from '@/lib/utils';
 import { RecursiveCharacterTextSplitter } from './text-splitter';
 
 // Custom implementation for PPQ.ai API
@@ -40,20 +39,10 @@ export type AIModelDisplayInfo = (typeof AI_MODEL_DISPLAY)[AIModel];
 export const availableModels = Object.values(AI_MODEL_DISPLAY);
 
 // Custom client implementation
-const createPPQClient = (virtualApiKey?: string) => {
-  
-  // Use provided virtualApiKey or fall back to credit_id in localStorage
-  let finalApiKey: string;
-  if (virtualApiKey) {
-    finalApiKey = virtualApiKey;
-  } else {
-    console.log("[PPQ CLIENT] No virtualApiKey provided, trying to get credit_id from localStorage");
-    try {
-      finalApiKey = getCreditId();
-    } catch (error) {
-      console.error("[PPQ CLIENT] Failed to get credit ID:", error);
-      throw new Error("No API key or credit ID available");
-    }
+const createPPQClient = (creditId: string) => {
+  if (!creditId) {
+    console.error("[PPQ CLIENT] No credit ID provided");
+    throw new Error("No credit ID available");
   }
 
   return async (messages: any[], options?: any) => {
@@ -69,7 +58,7 @@ const createPPQClient = (virtualApiKey?: string) => {
         
       const response = await fetch(PPQ_API_ENDPOINT, {
         method: 'POST',
-        headers: createHeaders(finalApiKey),
+        headers: createHeaders(creditId),
         body: JSON.stringify(requestData),
       });
       
@@ -224,9 +213,9 @@ export async function generateObject({
 }
 
 // Create model instances with configurations
-export function createModel(modelId: AIModel, virtualApiKey?: string) {
-  // Use provided virtualApiKey or fall back to localStorage
-  const ppqClient = createPPQClient(virtualApiKey);
+export function createModel(modelId: AIModel, creditId: string) {
+  // Create PPQ client with provided credit ID
+  const ppqClient = createPPQClient(creditId);
   
   return (messages: any[], options?: any) => {
     return ppqClient(messages, {

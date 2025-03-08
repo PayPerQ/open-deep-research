@@ -5,23 +5,23 @@ import { generateFeedback } from "@/lib/deep-research/feedback";
 
 export async function POST(req: NextRequest) {
   try {
-    const { query, numQuestions, modelId = "o3-mini", virtualApiKey } = await req.json();
+    const { query, numQuestions, modelId = "o3-mini", creditId } = await req.json();
     
-    console.log("\n🔑 [FEEDBACK ROUTE] === Virtual API Key Check ===");
-    console.log("Virtual API Key present:", !!virtualApiKey);
-    console.log("Virtual API Key type:", typeof virtualApiKey);
-    if (virtualApiKey) {
-      console.log("Virtual API Key length:", virtualApiKey.length);
+    console.log("\n🔑 [FEEDBACK ROUTE] === Credit ID Check ===");
+    console.log("Credit ID present:", !!creditId);
+    console.log("Credit ID type:", typeof creditId);
+    if (creditId) {
+      console.log("Credit ID length:", creditId.length);
     }
 
     // Retrieve API key(s) from secure cookies
     const openaiKey = req.cookies.get("openai-key")?.value;
     const firecrawlKey = req.cookies.get("firecrawl-key")?.value;
 
-    if (!virtualApiKey) {
-      console.error("[FEEDBACK ROUTE] No virtual API key provided in request");
+    if (!creditId) {
+      console.error("[FEEDBACK ROUTE] No credit ID provided in request");
       return NextResponse.json(
-        { error: "Virtual API key is required" },
+        { error: "Credit ID is required" },
         { status: 400 }
       );
     }
@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
           query,
           numQuestions,
           modelId: modelId as AIModel,
-          virtualApiKey,
+          creditId,
         });
 
       console.log("\n✅ [FEEDBACK ROUTE] === Success ===");

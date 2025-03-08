@@ -14,15 +14,15 @@ export async function POST(req: NextRequest) {
       breadth = 3,
       depth = 2,
       modelId = "o3-mini",
-      virtualApiKey,
+      creditId,
     } = await req.json();
 
     // Retrieve firecrawl key from secure cookies
     const firecrawlKey = req.cookies.get("firecrawl-key")?.value;
 
-    if (!virtualApiKey) {
+    if (!creditId) {
       return Response.json(
-        { error: "Virtual API key is required" },
+        { error: "Credit ID is required" },
         { status: 400 }
       );
     }
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
     });
 
     try {
-      const model = createModel(modelId as AIModel, virtualApiKey);
+      const model = createModel(modelId as AIModel, creditId);
       console.log("\n🤖 [RESEARCH ROUTE] === Model Created ===");
       console.log("Using Model:", modelId);
 
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
           const feedbackQuestions = await generateFeedback({
             query,
             modelId,
-            virtualApiKey,
+            creditId,
           });
           await writer.write(
             encoder.encode(
