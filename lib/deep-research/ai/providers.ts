@@ -1,6 +1,6 @@
 import { getEncoding } from 'js-tiktoken';
 
-import { getVirtualApiKey } from '@/lib/utils';
+import { getCreditId } from '@/lib/utils';
 import { RecursiveCharacterTextSplitter } from './text-splitter';
 
 // Custom implementation for PPQ.ai API
@@ -41,22 +41,18 @@ export const availableModels = Object.values(AI_MODEL_DISPLAY);
 
 // Custom client implementation
 const createPPQClient = (virtualApiKey?: string) => {
-  console.log("\n🔐 [PPQ CLIENT] === API Key Check ===");
-  console.log("Received virtualApiKey:", !!virtualApiKey);
   
-  // Use provided virtualApiKey or fall back to localStorage
+  // Use provided virtualApiKey or fall back to credit_id in localStorage
   let finalApiKey: string;
   if (virtualApiKey) {
-    console.log("[PPQ CLIENT] Using provided virtualApiKey");
     finalApiKey = virtualApiKey;
   } else {
-    console.log("[PPQ CLIENT] No virtualApiKey provided, trying localStorage");
+    console.log("[PPQ CLIENT] No virtualApiKey provided, trying to get credit_id from localStorage");
     try {
-      finalApiKey = getVirtualApiKey();
-      console.log("[PPQ CLIENT] Successfully got key from localStorage");
+      finalApiKey = getCreditId();
     } catch (error) {
-      console.error("[PPQ CLIENT] Failed to get virtual API key:", error);
-      throw new Error("No API key available");
+      console.error("[PPQ CLIENT] Failed to get credit ID:", error);
+      throw new Error("No API key or credit ID available");
     }
   }
 

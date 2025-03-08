@@ -49,22 +49,22 @@ export function getApiBasePath() {
   return '';
 }
 
-export function getVirtualApiKey(): string {
-  console.log("\n🔍 [UTILS] === getVirtualApiKey Called ===");
+export function getCreditId(): string {
+  console.log("\n🔍 [UTILS] === getCreditId Called ===");
   
   if (typeof window === "undefined") {
     console.error("[UTILS] Cannot access localStorage - not in browser environment");
     throw new Error("Cannot access localStorage outside of browser environment");
   }
   
-  const apiKey = window.localStorage.getItem("virtual_api_key");
-  if (!apiKey) {
-    console.error("[UTILS] No virtual_api_key found in localStorage");
-    throw new Error("No virtual_api_key found in localStorage");
+  const creditId = window.localStorage.getItem("credit_id");
+  if (!creditId) {
+    console.error("[UTILS] No credit_id found in localStorage");
+    throw new Error("No credit_id found in localStorage");
   }
   
-  console.log("[UTILS] Successfully retrieved virtual_api_key from localStorage");
-  console.log("[UTILS] Key length:", apiKey.length);
+  console.log("[UTILS] Successfully retrieved credit_id from localStorage");
+  console.log("[UTILS] ID length:", creditId.length);
   
-  return apiKey;
+  return creditId;
 }
