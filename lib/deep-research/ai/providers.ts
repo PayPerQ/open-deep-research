@@ -8,7 +8,7 @@ const PPQ_API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_BASE_URL}/chat/completio
 // Helper function to create headers
 const createHeaders = (apiKey: string) => ({
   'Content-Type': 'application/json',
-  'Authorization': `Bearer ${apiKey}`,
+//   'Authorization': `Bearer ${apiKey}`,
 });
 
 // Model Display Information
@@ -59,7 +59,7 @@ const createPPQClient = (creditId: string) => {
       const response = await fetch(PPQ_API_ENDPOINT, {
         method: 'POST',
         headers: createHeaders(creditId),
-        body: JSON.stringify(requestData),
+        body: JSON.stringify({...requestData, credit_id: creditId}),
       });
       
       const responseText = await response.text();
