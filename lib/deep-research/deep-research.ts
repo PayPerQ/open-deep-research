@@ -19,7 +19,30 @@ type DeepResearchOptions = {
   onProgress?: (update: string) => Promise<void>;
   model: ReturnType<typeof createModel>;
   firecrawlKey?: string;
+  creditId: string; // Add creditId as a required parameter
 };
+
+// Helper function to track web retrieval
+async function trackWebRetrieval(creditId: string) {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/web-retrieval`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        credit_id: creditId,
+        query_source: 'ui',
+      }),
+    });
+    
+    if (!response.ok) {
+      console.error('Failed to track web retrieval:', await response.text());
+    }
+  } catch (error) {
+    console.error('Error tracking web retrieval:', error);
+  }
+}
 
 // Update the firecrawl initialization to use the provided key
 const getFirecrawl = (apiKey?: string) =>
@@ -205,6 +228,7 @@ export async function deepResearch({
   onProgress,
   model,
   firecrawlKey,
+  creditId,
 }: DeepResearchOptions): Promise<ResearchResult> {
   const firecrawl = getFirecrawl(firecrawlKey);
   const results: ResearchResult[] = [];
@@ -235,6 +259,9 @@ export async function deepResearch({
         limit: 5,
         scrapeOptions: { formats: ['markdown'] },
       });
+      
+      // Track web retrieval after each SERP query
+      await trackWebRetrieval(creditId);
 
       await logProgress(
         formatProgress.found(searchResults.data.length, serpQuery),

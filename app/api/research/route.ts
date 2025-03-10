@@ -83,6 +83,7 @@ export async function POST(req: NextRequest) {
             depth,
             model,
             firecrawlKey,
+            creditId,
             onProgress: async (update: string) => {
               console.log("\n📊 [RESEARCH ROUTE] Progress Update:", update);
               await writer.write(
