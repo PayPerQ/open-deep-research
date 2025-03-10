@@ -26,7 +26,7 @@ type DeepResearchOptions = {
 async function trackWebRetrieval(creditId: string, retries = 3) {
   for (let attempt = 0; attempt < retries; attempt++) {
     try {
-      const url = `${process.env.NEXT_PUBLIC_BASE_URL}/web-retrieval`;
+      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/web-retrieval`;
       console.log(`Attempt ${attempt + 1}/${retries} - Tracking web retrieval:`, {
         url,
         creditId,
