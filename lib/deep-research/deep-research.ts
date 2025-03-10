@@ -22,26 +22,75 @@ type DeepResearchOptions = {
   creditId: string; // Add creditId as a required parameter
 };
 
-// Helper function to track web retrieval
-async function trackWebRetrieval(creditId: string) {
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/web-retrieval`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        credit_id: creditId,
-        query_source: 'ui',
-      }),
-    });
-    
-    if (!response.ok) {
-      console.error('Failed to track web retrieval:', await response.text());
+// Helper function to track web retrieval with retry logic
+async function trackWebRetrieval(creditId: string, retries = 3) {
+  for (let attempt = 0; attempt < retries; attempt++) {
+    try {
+      const url = `${process.env.NEXT_PUBLIC_BASE_URL}/web-retrieval`;
+      console.log(`Attempt ${attempt + 1}/${retries} - Tracking web retrieval:`, {
+        url,
+        creditId,
+      });
+      
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          credit_id: creditId,
+          query_source: 'ui',
+        }),
+        // Add credentials to handle cookies if needed
+        credentials: 'include',
+      });
+      
+      if (response.ok) {
+        console.log('Successfully tracked web retrieval');
+        return true;
+      }
+      
+      // Try to parse the error response
+      let errorText = '';
+      let errorJson = null;
+      try {
+        errorText = await response.text();
+        if (errorText && errorText.trim().startsWith('{')) {
+          errorJson = JSON.parse(errorText);
+        }
+      } catch (parseError) {
+        console.error('Error parsing error response:', parseError);
+      }
+      
+      console.error(`Attempt ${attempt + 1}/${retries} failed:`, {
+        status: response.status,
+        statusText: response.statusText,
+        errorText,
+        errorJson,
+        url,
+        headers: Object.fromEntries(response.headers.entries()),
+      });
+      
+      // Don't retry on client errors (4xx) except for 429 (Too Many Requests)
+      if (response.status >= 400 && response.status < 500 && response.status !== 429) {
+        console.error('Client error, not retrying');
+        return false;
+      }
+    } catch (error) {
+      console.error(`Attempt ${attempt + 1}/${retries} error:`, error);
     }
-  } catch (error) {
-    console.error('Error tracking web retrieval:', error);
+    
+    // Wait before retry (exponential backoff)
+    if (attempt < retries - 1) {
+      const backoffMs = 1000 * Math.pow(2, attempt);
+      console.log(`Retrying in ${backoffMs}ms...`);
+      await new Promise(r => setTimeout(r, backoffMs));
+    }
   }
+  
+  console.error(`Failed to track web retrieval after ${retries} attempts`);
+  return false;
 }
 
 // Update the firecrawl initialization to use the provided key
