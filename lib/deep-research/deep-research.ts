@@ -40,7 +40,7 @@ async function trackWebRetrieval(creditId: string, retries = 3) {
         },
         body: JSON.stringify({
           credit_id: creditId,
-          query_source: 'ui',
+          query_source: 'api',
         }),
         // Add credentials to handle cookies if needed
         credentials: 'include',
