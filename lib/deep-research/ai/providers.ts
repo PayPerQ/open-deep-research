@@ -59,7 +59,7 @@ const createPPQClient = (creditId: string) => {
       const response = await fetch(PPQ_API_ENDPOINT, {
         method: 'POST',
         headers: createHeaders(creditId),
-        body: JSON.stringify({...requestData, credit_id: creditId, query_source: 'ui',}),
+        body: JSON.stringify({...requestData, credit_id: creditId, query_source: 'deep research',}),
       });
       
       const responseText = await response.text();
