@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Message } from "ai";
 import { motion } from "framer-motion";
-import { BrainCircuitIcon, GithubIcon, PanelRightOpen } from "lucide-react";
+import { BrainCircuitIcon, GithubIcon, InfoIcon, PanelRightOpen } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { useScrollToBottom } from "@/lib/hooks/use-scroll-to-bottom";
 import { getApiBasePath } from "@/lib/utils";
@@ -431,6 +432,18 @@ export function Chat({
                     An open source alternative to OpenAI and Gemini's deep
                     research capabilities. Ask any question to generate a
                     comprehensive report.
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="inline-flex ml-1">
+                            <InfoIcon className="h-3 w-3 text-muted-foreground/70" />
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent side="bottom">
+                          <p>This tool is made possible by the great open source work of <a href="https://github.com/dzhng/deep-research" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline"> dzhng's Open Deep Research</a> as well as  <a href="https://github.com/fdarkaou/open-deep-research" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">fdarkaou's great UI.</a></p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </motion.p>
                 </div>
               </motion.div>
