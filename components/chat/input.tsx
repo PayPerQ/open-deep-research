@@ -29,7 +29,6 @@ interface MultimodalInputProps {
     input: string,
     config: {
       breadth: number;
-      depth: number;
       modelId: string;
     }
   ) => void;
@@ -49,7 +48,6 @@ export function MultimodalInput({
 }: MultimodalInputProps) {
   const [input, setInput] = useState("");
   const [breadth, setBreadth] = useState(4);
-  const [depth, setDepth] = useState(2);
   const [selectedModel, setSelectedModel] = useState<AIModelDisplayInfo>(
     availableModels.find((model) => model.id === "o3-mini") ||
       availableModels[0]
@@ -104,7 +102,6 @@ export function MultimodalInput({
     }
     onSubmit(input, {
       breadth,
-      depth,
       modelId: selectedModel.id,
     });
     setInput("");
@@ -279,29 +276,6 @@ export function MultimodalInput({
           />
         </div>
 
-        <div className="flex items-center gap-2">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <span className="text-xs text-muted-foreground flex items-center gap-1">
-                  D:{depth}
-                  <InfoIcon className="h-3 w-3 text-muted-foreground/70" />
-                </span>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Depth controls the amount of reasoning steps taken to answer your query. It essentially determines how deep your research goes.</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <Slider
-            value={[depth]}
-            min={1}
-            max={5}
-            step={1}
-            className="w-20"
-            onValueChange={([value]) => setDepth(value)}
-          />
-        </div>
 
         {/* Mobile Download Button */}
         {canDownload && <DownloadButton />}
@@ -424,29 +398,6 @@ export function MultimodalInput({
             />
           </div>
 
-          <div className="flex items-center gap-2">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="text-xs text-muted-foreground flex items-center gap-1">
-                    Depth: {depth}
-                    <InfoIcon className="h-3 w-3 text-muted-foreground/70" />
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Depth controls the amount of reasoning steps taken to answer your query. It essentially determines how deep your research goes.</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <Slider
-              value={[depth]}
-              min={1}
-              max={5}
-              step={1}
-              className="w-24"
-              onValueChange={([value]) => setDepth(value)}
-            />
-          </div>
         </div>
 
         {/* Desktop Download Button */}

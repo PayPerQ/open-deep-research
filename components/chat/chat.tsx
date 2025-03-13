@@ -129,7 +129,7 @@ export function Chat({
   // Helper function to call the research endpoint
   const sendResearchQuery = async (
     query: string,
-    config: { breadth: number; depth: number; modelId: string }
+    config: { breadth: number; modelId: string }
   ) => {
     try {
       setIsLoading(true);
@@ -152,7 +152,6 @@ export function Chat({
         body: JSON.stringify({
           query,
           breadth: config.breadth,
-          depth: config.depth,
           modelId: config.modelId,
           creditId: creditId,
         }),
@@ -246,7 +245,7 @@ export function Chat({
 
   const handleSubmit = async (
     userInput: string,
-    config: { breadth: number; depth: number; modelId: string }
+    config: { breadth: number; modelId: string }
   ) => {
     if (!userInput.trim() || isLoading) return;
 
