@@ -89,7 +89,7 @@ export function Chat({
     }
     
     // Add new conversation to the array
-    conversationHistory.unshift(newConversation); // Add to the beginning
+    conversationHistory.push(newConversation); // Add to the end
     
     // Save back to localStorage
     localStorage.setItem("conversationHistory", JSON.stringify(conversationHistory));
@@ -322,7 +322,7 @@ export function Chat({
       }
     } else if (stage === "feedback") {
       // In feedback stage, combine the initial query and follow-up answers
-      const combined = `Deep Research Topic: ${initialQuery}\nFollow-up Answers:\n${userInput}`;
+      const combined = `Deep Research: ${initialQuery}\nFollow-up Answers:\n${userInput}`;
       setStage("researching");
       try {
         await sendResearchQuery(combined, config);
