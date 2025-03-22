@@ -269,7 +269,7 @@ export function MultimodalInput({
           <Slider
             value={[breadth]}
             min={2}
-            max={10}
+            max={8}
             step={1}
             className="w-20"
             onValueChange={([value]) => setBreadth(value)}
