@@ -16,7 +16,7 @@ const createHeaders = (creditId: string) => ({
 export const AI_MODEL_DISPLAY = {
     'gpt-5': {
       id: 'gpt-5-chat',
-      name: 'GPT-5 (~$1)',
+      name: 'GPT-5 (~60¢)',
       logo: 'https://deepresearch.ppq.ai/providers/openai.webp',
       vision: true,
     },
@@ -31,6 +31,12 @@ export const AI_MODEL_DISPLAY = {
       name: 'o4 mini high (~40¢)',
       logo: 'https://deepresearch.ppq.ai/providers/openai.webp',
       vision: false,
+    },
+    'claude-sonnet-4.5': {
+      id: 'claude-sonnet-4.5',
+      name: 'Claude Sonnet 4.5 (80¢)',
+      logo: 'https://deepresearch.ppq.ai/providers/openai.webp',
+      vision: true,
     },
   } as const;
   
