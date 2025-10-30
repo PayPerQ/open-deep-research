@@ -15,7 +15,7 @@ const createHeaders = (apiKey: string) => ({
 // Model Display Information
 export const AI_MODEL_DISPLAY = {
     'gpt-5': {
-      id: 'gpt-5',
+      id: 'gpt-5-chat',
       name: 'GPT-5 (~$1)',
       logo: 'https://deepresearch.ppq.ai/providers/openai.webp',
       vision: true,
