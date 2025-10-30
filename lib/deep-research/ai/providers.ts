@@ -14,15 +14,15 @@ const createHeaders = (apiKey: string) => ({
 
 // Model Display Information
 export const AI_MODEL_DISPLAY = {
-    'gpt-4o': {
-      id: 'gpt-4o',
-      name: 'GPT-4o (~$1)',
+    'gpt-5': {
+      id: 'gpt-5',
+      name: 'GPT-5 (~$1)',
       logo: 'https://deepresearch.ppq.ai/providers/openai.webp',
       vision: true,
     },
-    'gpt-4o-mini': {
-      id: 'gpt-4o-mini',
-      name: 'GPT-4o mini (~21¢)',
+    'gpt-5-nano': {
+      id: 'gpt-5-nano',
+      name: 'GPT-5 nano (~20¢)',
       logo: 'https://deepresearch.ppq.ai/providers/openai.webp',
       vision: true,
     },
