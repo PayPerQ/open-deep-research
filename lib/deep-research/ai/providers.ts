@@ -28,7 +28,7 @@ export const AI_MODEL_DISPLAY = {
     },
     'o4-mini-high': {
       id: 'o4-mini-high',
-      name: 'o4 mini high (~40¢)',
+      name: 'o4 mini-high (~40¢)',
       logo: 'https://deepresearch.ppq.ai/providers/openai.webp',
       vision: false,
     },
