@@ -6,7 +6,7 @@ import { systemPrompt } from './prompt';
 export async function generateFeedback({
   query,
   numQuestions = 3,
-  modelId = 'o3-mini',
+  modelId = 'o4-mini-high',
   creditId,
 }: {
   query: string;

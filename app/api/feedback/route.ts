@@ -5,7 +5,7 @@ import { generateFeedback } from "@/lib/deep-research/feedback";
 
 export async function POST(req: NextRequest) {
   try {
-    const { query, numQuestions, modelId = "o3-mini", creditId } = await req.json();
+    const { query, numQuestions, modelId = "o4-mini-high", creditId } = await req.json();
     
     console.log("\n🔑 [FEEDBACK ROUTE] === Credit ID Check ===");
     console.log("Credit ID present:", !!creditId);
