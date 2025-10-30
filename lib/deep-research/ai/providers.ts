@@ -9,7 +9,7 @@ const PPQ_API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_BASE_URL}/chat/completio
 const createHeaders = (apiKey: string) => ({
   'Content-Type': 'application/json',
   'Referer': 'https://deepresearch.ppq.ai',
-//   'Authorization': `Bearer ${apiKey}`,
+  'Authorization': `Bearer ${apiKey}`,
 });
 
 // Model Display Information
@@ -22,7 +22,7 @@ export const AI_MODEL_DISPLAY = {
     },
     'gpt-4o-mini': {
       id: 'gpt-4o-mini',
-      name: 'GPT-4o mini (~20¢)',
+      name: 'GPT-4o mini (~21¢)',
       logo: 'https://deepresearch.ppq.ai/providers/openai.webp',
       vision: true,
     },
