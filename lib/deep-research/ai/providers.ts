@@ -8,6 +8,7 @@ const PPQ_API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_BASE_URL}/chat/completio
 // Helper function to create headers
 const createHeaders = (apiKey: string) => ({
   'Content-Type': 'application/json',
+  'Referer': 'https://deepresearch.ppq.ai',
 //   'Authorization': `Bearer ${apiKey}`,
 });
 
