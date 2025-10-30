@@ -6,10 +6,10 @@ import { RecursiveCharacterTextSplitter } from './text-splitter';
 const PPQ_API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_BASE_URL}/chat/completions`;
 
 // Helper function to create headers
-const createHeaders = (apiKey: string) => ({
+const createHeaders = (creditId: string) => ({
   'Content-Type': 'application/json',
   'Referer': 'https://deepresearch.ppq.ai',
-  'Authorization': `Bearer ${apiKey}`,
+  'X-Credit-ID': creditId,
 });
 
 // Model Display Information
@@ -60,7 +60,7 @@ const createPPQClient = (creditId: string) => {
       const response = await fetch(PPQ_API_ENDPOINT, {
         method: 'POST',
         headers: createHeaders(creditId),
-        body: JSON.stringify({...requestData, credit_id: creditId, query_source: 'deep research',}),
+        body: JSON.stringify({...requestData, query_source: 'deep research' }),
       });
       
       const responseText = await response.text();
