@@ -34,7 +34,7 @@ export const AI_MODEL_DISPLAY = {
     },
     'claude-sonnet-4.5': {
       id: 'claude-sonnet-4.5',
-      name: 'Claude Sonnet 4.5 (80¢)',
+      name: 'Claude Sonnet 4.5 (~$1.25)',
       logo: 'https://deepresearch.ppq.ai/providers/openai.webp',
       vision: true,
     },
