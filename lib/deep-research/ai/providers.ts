@@ -20,17 +20,17 @@ export const AI_MODEL_DISPLAY = {
       logo: 'https://deepresearch.ppq.ai/providers/openai.webp',
       vision: true,
     },
+    'gpt-5-chat': {
+      id: 'gpt-5-chat',
+      name: 'GPT-5 (~60¢)',
+      logo: 'https://deepresearch.ppq.ai/providers/openai.webp',
+      vision: true,
+    },
     'gpt-5-nano': {
       id: 'gpt-5-nano',
       name: 'GPT-5 nano (~20¢)',
       logo: 'https://deepresearch.ppq.ai/providers/openai.webp',
       vision: true,
-    },
-    'o4-mini-high': {
-      id: 'o4-mini-high',
-      name: 'o4 mini-high (~40¢)',
-      logo: 'https://deepresearch.ppq.ai/providers/openai.webp',
-      vision: false,
     },
     'claude-sonnet-4.5': {
       id: 'claude-sonnet-4.5',

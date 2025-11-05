@@ -49,7 +49,7 @@ export function MultimodalInput({
   const [input, setInput] = useState("");
   const [breadth, setBreadth] = useState(4);
   const [selectedModel, setSelectedModel] = useState<AIModelDisplayInfo>(
-    availableModels.find((model) => model.id === "o4-mini-high") ||
+    availableModels.find((model) => model.id === "gpt-5-chat") ||
       availableModels[0]
   );
   const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
