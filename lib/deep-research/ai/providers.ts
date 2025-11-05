@@ -14,12 +14,6 @@ const createHeaders = (creditId: string) => ({
 
 // Model Display Information
 export const AI_MODEL_DISPLAY = {
-    'gpt-5': {
-      id: 'gpt-5-chat',
-      name: 'GPT-5 (~60¢)',
-      logo: 'https://deepresearch.ppq.ai/providers/openai.webp',
-      vision: true,
-    },
     'gpt-5-chat': {
       id: 'gpt-5-chat',
       name: 'GPT-5 (~60¢)',
