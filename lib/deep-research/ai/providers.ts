@@ -16,19 +16,19 @@ const createHeaders = (creditId: string) => ({
 export const AI_MODEL_DISPLAY = {
     'openai/gpt-5.3-chat': {
       id: 'openai/gpt-5.3-chat',
-      name: 'GPT-5.3 (~35¢)',
+      name: 'GPT-5.3 (~75¢)',
       logo: 'https://deepresearch.ppq.ai/providers/openai.webp',
       vision: true,
     },
     'gpt-5-nano': {
       id: 'gpt-5-nano',
-      name: 'GPT-5 nano (~20¢)',
+      name: 'GPT-5 nano (~30¢)',
       logo: 'https://deepresearch.ppq.ai/providers/openai.webp',
       vision: true,
     },
     'claude-sonnet-4.6': {
       id: 'claude-sonnet-4.6',
-      name: 'Claude Sonnet 4.6 (~45¢)',
+      name: 'Claude Sonnet 4.6 (~75¢)',
       logo: 'https://deepresearch.ppq.ai/providers/openai.webp',
       vision: true,
     },
