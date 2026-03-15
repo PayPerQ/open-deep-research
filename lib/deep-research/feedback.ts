@@ -6,7 +6,7 @@ import { systemPrompt } from './prompt';
 export async function generateFeedback({
   query,
   numQuestions = 3,
-  modelId = 'gpt-5-chat',
+  modelId = 'openai/gpt-5.3-chat',
   creditId,
 }: {
   query: string;

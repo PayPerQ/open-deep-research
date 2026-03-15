@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
       query,
       breadth: rawBreadth = 3,
       depth = 2,
-      modelId = "o4-mini-high",
+      modelId = "openai/gpt-5.3-chat",
       creditId,
     } = await req.json();
 
