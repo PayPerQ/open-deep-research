@@ -11,11 +11,16 @@ export async function POST(req: NextRequest) {
   try {
     const {
       query,
-      breadth = 3,
+      breadth: rawBreadth = 3,
       depth = 2,
       modelId = "o4-mini-high",
       creditId,
     } = await req.json();
+
+    // Server-side breadth validation — enforce min 2, max 8
+    const MAX_BREADTH = 8;
+    const MIN_BREADTH = 2;
+    const breadth = Math.min(MAX_BREADTH, Math.max(MIN_BREADTH, Math.floor(Number(rawBreadth) || MIN_BREADTH)));
 
     // Retrieve firecrawl key from secure cookies
     const firecrawlKey = req.cookies.get("firecrawl-key")?.value;
@@ -25,6 +30,27 @@ export async function POST(req: NextRequest) {
         { error: "Credit ID is required" },
         { status: 400 }
       );
+    }
+
+    // Pre-research credit check — verify user has sufficient balance before starting
+    try {
+      const creditCheckUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/credits/balance`;
+      const creditCheckRes = await fetch(creditCheckUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ credit_id: creditId }),
+      });
+      if (creditCheckRes.ok) {
+        const creditData = await creditCheckRes.json();
+        if (creditData.balance !== undefined && creditData.balance <= 0) {
+          return Response.json(
+            { error: "Insufficient credits to start deep research" },
+            { status: 402 }
+          );
+        }
+      }
+    } catch (err) {
+      console.error("Credit check failed, proceeding anyway:", err);
     }
 
     // Add API key validation

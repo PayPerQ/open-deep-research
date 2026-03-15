@@ -23,15 +23,16 @@ type DeepResearchOptions = {
 };
 
 // Helper function to track web retrieval with retry logic
-async function trackWebRetrieval(creditId: string, retries = 3) {
+async function trackWebRetrieval(creditId: string, creditsUsed?: number, retries = 3) {
   for (let attempt = 0; attempt < retries; attempt++) {
     try {
       const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/web-retrieval`;
       console.log(`Attempt ${attempt + 1}/${retries} - Tracking web retrieval:`, {
         url,
         creditId,
+        creditsUsed,
       });
-      
+
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -41,6 +42,7 @@ async function trackWebRetrieval(creditId: string, retries = 3) {
         body: JSON.stringify({
           credit_id: creditId,
           query_source: 'deep research',
+          ...(creditsUsed !== undefined && { firecrawl_credits: creditsUsed }),
         }),
         // Add credentials to handle cookies if needed
         credentials: 'include',
@@ -308,9 +310,10 @@ export async function deepResearch({
         limit: 5,
         scrapeOptions: { formats: ['markdown'] },
       });
-      
-      // Track web retrieval after each SERP query
-      await trackWebRetrieval(creditId);
+
+      // Track web retrieval with actual Firecrawl credits consumed
+      const creditsUsed = (searchResults as any).creditsUsed;
+      await trackWebRetrieval(creditId, creditsUsed);
 
       await logProgress(
         formatProgress.found(searchResults.data.length, serpQuery),
