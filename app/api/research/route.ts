@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 
 import {
   deepResearch,
@@ -151,11 +152,21 @@ export async function POST(req: NextRequest) {
         } catch (error) {
           console.error("\n❌ [RESEARCH ROUTE] === Research Process Error ===");
           console.error("Error:", error);
+          Sentry.captureException(error, {
+            tags: { route: "research", model_id: modelId },
+            extra: { breadth, depth, creditIdPrefix: creditId?.substring(0, 5) },
+          });
+          // Forward a short user-facing message — capped to limit any
+          // internal detail (URLs, tokens) that may appear in raw errors.
+          // Full error stays in Sentry via captureException above.
+          const rawMessage =
+            error instanceof Error ? error.message : String(error);
+          const errorMessage = rawMessage.slice(0, 200);
           await writer.write(
             encoder.encode(
               `data: ${JSON.stringify({
                 type: "error",
-                message: "Research failed",
+                message: errorMessage,
               })}\n\n`
             )
           );
@@ -174,11 +185,17 @@ export async function POST(req: NextRequest) {
     } catch (error) {
       console.error("\n💥 [RESEARCH ROUTE] === Route Error ===");
       console.error("Error:", error);
+      Sentry.captureException(error, {
+        tags: { route: "research", phase: "setup", model_id: modelId },
+      });
       return Response.json({ error: "Research failed" }, { status: 500 });
     }
   } catch (error) {
     console.error("\n💥 [RESEARCH ROUTE] === Parse Error ===");
     console.error("Error:", error);
+    Sentry.captureException(error, {
+      tags: { route: "research", phase: "parse" },
+    });
     return Response.json({ error: "Research failed" }, { status: 500 });
   }
 }

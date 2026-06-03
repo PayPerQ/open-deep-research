@@ -127,11 +127,13 @@ export function Chat({
         step.content.includes("Synthesizing")
     ).length > 0;
 
-  // Helper function to call the research endpoint
+  // Helper function to call the research endpoint.
+  // Returns true on success, false if an error was shown to the user.
   const sendResearchQuery = async (
     query: string,
     config: { breadth: number; modelId: string }
-  ) => {
+  ): Promise<boolean> => {
+    let hadError = false;
     try {
       setIsLoading(true);
       setProgress([]);
@@ -157,6 +159,31 @@ export function Chat({
           creditId: creditId,
         }),
       });
+
+      // The route returns Response.json({error}, {status: 4xx/5xx}) for
+      // setup / parse / credit-check failures. Those responses have a
+      // normal JSON body — not SSE — so the stream parser would silently
+      // skip them. Catch them here so the user sees the error.
+      if (!response.ok) {
+        let detail = "";
+        try {
+          const body = await response.json();
+          if (typeof body?.error === "string") detail = `: ${body.error}`;
+          else if (typeof body?.message === "string") detail = `: ${body.message}`;
+        } catch {
+          // body wasn't JSON; ignore
+        }
+        hadError = true;
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now().toString(),
+            role: "assistant",
+            content: `Sorry, the research could not be started${detail}.`,
+          },
+        ]);
+        return !hadError;
+      }
 
       const reader = response.body?.getReader();
       if (!reader) throw new Error("No reader available");
@@ -208,6 +235,19 @@ export function Chat({
                 saveReportToLocalStorage(event.report, query);
               } else if (event.type === "report_part") {
                 reportParts.push(event.content);
+              } else if (event.type === "error") {
+                hadError = true;
+                const detail = event.message
+                  ? `: ${event.message}`
+                  : "";
+                setMessages((prev) => [
+                  ...prev,
+                  {
+                    id: Date.now().toString(),
+                    role: "assistant",
+                    content: `Sorry, the research failed before a report could be generated${detail}. Your credits used for this run will be reviewed — please reach out to support if you weren't credited back.`,
+                  },
+                ]);
               }
             } catch (e) {
               console.error("Error parsing event:", e);
@@ -231,17 +271,23 @@ export function Chat({
       }
     } catch (error) {
       console.error("Research error:", error);
+      hadError = true;
+      const detail =
+        error instanceof Error && error.message
+          ? `: ${error.message}`
+          : "";
       setMessages((prev) => [
         ...prev,
         {
           id: Date.now().toString(),
           role: "assistant",
-          content: "Sorry, there was an error conducting the research.",
+          content: `Sorry, there was an error conducting the research${detail}.`,
         },
       ]);
     } finally {
       setIsLoading(false);
     }
+    return !hadError;
   };
 
   const handleSubmit = async (
@@ -324,22 +370,26 @@ export function Chat({
       // In feedback stage, combine the initial query and follow-up answers
       const combined = `Deep Research: ${initialQuery}\nFollow-up Answers:\n${userInput}`;
       setStage("researching");
+      let ok = false;
       try {
-        await sendResearchQuery(combined, config);
+        ok = await sendResearchQuery(combined, config);
       } finally {
         setIsLoading(false);
         // Reset the stage so further messages will be processed
         setStage("initial");
-        // Inform the user that a new research session can be started
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: Date.now().toString(),
-            role: "assistant",
-            content:
-              "Research session complete. You can now ask another question to begin a new research session.",
-          },
-        ]);
+        // Only show the "session complete" trailer if research actually
+        // succeeded — otherwise the user already saw an error message.
+        if (ok) {
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: Date.now().toString(),
+              role: "assistant",
+              content:
+                "Research session complete. You can now ask another question to begin a new research session.",
+            },
+          ]);
+        }
       }
     }
   };

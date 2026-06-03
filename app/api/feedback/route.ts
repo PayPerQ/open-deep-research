@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 
 import { AIModel } from "@/lib/deep-research/ai/providers";
 import { generateFeedback } from "@/lib/deep-research/feedback";
@@ -65,6 +66,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("\n💥 [FEEDBACK ROUTE] === Route Error ===");
     console.error("Error:", error);
+    Sentry.captureException(error, { tags: { route: "feedback" } });
 
     return NextResponse.json(
       {
