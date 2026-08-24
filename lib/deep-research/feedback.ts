@@ -1,12 +1,12 @@
 import { z } from 'zod';
 
-import { createModel, type AIModel, generateObject } from './ai/providers';
+import { createModel, DEFAULT_AI_MODEL_ID, type AIModel, generateObject } from './ai/providers';
 import { systemPrompt } from './prompt';
 
 export async function generateFeedback({
   query,
   numQuestions = 3,
-  modelId = 'openai/gpt-5.3-chat',
+  modelId = DEFAULT_AI_MODEL_ID,
   creditId,
 }: {
   query: string;

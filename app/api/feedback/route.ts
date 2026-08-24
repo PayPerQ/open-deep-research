@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 
-import { AIModel } from "@/lib/deep-research/ai/providers";
+import { resolveModelId } from "@/lib/deep-research/ai/providers";
 import { generateFeedback } from "@/lib/deep-research/feedback";
 
 export async function POST(req: NextRequest) {
   try {
-    const { query, numQuestions, modelId = "openai/gpt-5.3-chat", creditId } = await req.json();
+    const { query, numQuestions, modelId, creditId } = await req.json();
     
     console.log("\n🔑 [FEEDBACK ROUTE] === Credit ID Check ===");
     console.log("Credit ID present:", !!creditId);
@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
         const questions = await generateFeedback({
           query,
           numQuestions,
-          modelId: modelId as AIModel,
+          modelId: resolveModelId(modelId),
           creditId,
         });
 

@@ -20,6 +20,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { getApiBasePath } from "@/lib/utils";
 import {
   availableModels,
+  DEFAULT_AI_MODEL_ID,
   type AIModelDisplayInfo,
 } from "@/lib/deep-research/ai/providers";
 import { ApiKeyDialog } from "@/components/chat/api-key-dialog";
@@ -49,7 +50,7 @@ export function MultimodalInput({
   const [input, setInput] = useState("");
   const [breadth, setBreadth] = useState(4);
   const [selectedModel, setSelectedModel] = useState<AIModelDisplayInfo>(
-    availableModels.find((model) => model.id === "openai/gpt-5.3-chat") ||
+    availableModels.find((model) => model.id === DEFAULT_AI_MODEL_ID) ||
       availableModels[0]
   );
   const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
