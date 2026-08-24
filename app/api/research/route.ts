@@ -6,7 +6,7 @@ import {
   generateFeedback,
   writeFinalReport,
 } from "@/lib/deep-research";
-import { createModel, type AIModel } from "@/lib/deep-research/ai/providers";
+import { createModel, resolveModelId } from "@/lib/deep-research/ai/providers";
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
       query,
       breadth: rawBreadth = 3,
       depth = 2,
-      modelId = "openai/gpt-5.3-chat",
+      modelId,
       creditId,
     } = await req.json();
 
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
     });
 
     try {
-      const model = createModel(modelId as AIModel, creditId);
+      const model = createModel(resolveModelId(modelId), creditId);
       console.log("\n🤖 [RESEARCH ROUTE] === Model Created ===");
       console.log("Using Model:", modelId);
 

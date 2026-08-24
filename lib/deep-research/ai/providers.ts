@@ -14,21 +14,21 @@ const createHeaders = (creditId: string) => ({
 
 // Model Display Information
 export const AI_MODEL_DISPLAY = {
-    'openai/gpt-5.3-chat': {
-      id: 'openai/gpt-5.3-chat',
-      name: 'GPT-5.3 (~75¢)',
+    'openai/gpt-5.6-terra': {
+      id: 'openai/gpt-5.6-terra',
+      name: 'GPT-5.6 Terra (~75¢)',
       logo: 'https://deepresearch.ppq.ai/providers/openai.webp',
       vision: true,
     },
-    'gpt-5-nano': {
-      id: 'gpt-5-nano',
-      name: 'GPT-5 nano (~30¢)',
-      logo: 'https://deepresearch.ppq.ai/providers/openai.webp',
+    'claude-sonnet-5': {
+      id: 'claude-sonnet-5',
+      name: 'Claude Sonnet 5 (~70¢)',
+      logo: 'https://deepresearch.ppq.ai/providers/anthropic.svg',
       vision: true,
     },
-    'claude-sonnet-4.6': {
-      id: 'claude-sonnet-4.6',
-      name: 'Claude Sonnet 4.6 (~75¢)',
+    'openai/gpt-5.6-luna': {
+      id: 'openai/gpt-5.6-luna',
+      name: 'GPT-5.6 Luna (~10¢)',
       logo: 'https://deepresearch.ppq.ai/providers/openai.webp',
       vision: true,
     },
@@ -39,6 +39,25 @@ export type AIModel = keyof typeof AI_MODEL_DISPLAY;
 export type AIModelDisplayInfo = (typeof AI_MODEL_DISPLAY)[AIModel];
 export const availableModels = Object.values(AI_MODEL_DISPLAY);
 
+// Single source of truth for the default. Upstream retires model ids without notice
+// (openai/gpt-5.3-chat started 404ing on 2026-07-18), so this must not be duplicated
+// across the routes and the UI.
+export const DEFAULT_AI_MODEL_ID = 'openai/gpt-5.6-terra' satisfies AIModel;
+
+export function isAIModel(value: unknown): value is AIModel {
+  return typeof value === 'string' && Object.prototype.hasOwnProperty.call(AI_MODEL_DISPLAY, value);
+}
+
+// Callers may pass a model id from a stale client or a hand-rolled API request.
+// Fall back rather than forwarding an unknown id and taking an upstream 404.
+export function resolveModelId(value: unknown): AIModel {
+  if (isAIModel(value)) return value;
+  if (value !== undefined) {
+    console.warn(`Unknown model id ${JSON.stringify(value)}, falling back to ${DEFAULT_AI_MODEL_ID}`);
+  }
+  return DEFAULT_AI_MODEL_ID;
+}
+
 // Custom client implementation
 const createPPQClient = (creditId: string) => {
   if (!creditId) {
@@ -48,7 +67,7 @@ const createPPQClient = (creditId: string) => {
 
   return async (messages: any[], options?: any) => {
     const requestData = {
-      model: options?.model || 'gpt4o',
+      model: options?.model || DEFAULT_AI_MODEL_ID,
       messages,
       ...options,
     };
@@ -93,6 +112,46 @@ const createPPQClient = (creditId: string) => {
   };
 };
 
+// Strip a markdown code fence that wraps the ENTIRE payload.
+//
+// Anchored to the whole string on purpose. A lazy `/```(?:json)?\s*([\s\S]*?)\s*```/`
+// stops at the FIRST closing fence it finds, which — for a research report containing
+// its own code blocks — is a fence *inside* the JSON string. That truncates the payload
+// mid-string and surfaces as "Unterminated string in JSON at position N".
+export function stripCodeFence(raw: string): string {
+  const trimmed = raw.trim();
+  const fenced = trimmed.match(/^```(?:json)?[ \t]*\r?\n([\s\S]*)\r?\n```$/);
+  return fenced ? fenced[1] : trimmed;
+}
+
+// Best-effort JSON parse. Models wrap the object in a fence, prepend a preamble, or
+// append a sign-off; try progressively looser candidates and return the first that parses.
+export function parseLooseJson(raw: string): any {
+  const trimmed = raw.trim();
+  const unfenced = stripCodeFence(raw);
+
+  const candidates = [trimmed];
+  if (unfenced !== trimmed) candidates.push(unfenced);
+
+  // Outermost {...} slice — handles surrounding prose, and a leading fence whose
+  // closing counterpart never arrived because the model was cut off.
+  for (const source of unfenced === trimmed ? [trimmed] : [trimmed, unfenced]) {
+    const start = source.indexOf('{');
+    const end = source.lastIndexOf('}');
+    if (start !== -1 && end > start) candidates.push(source.slice(start, end + 1));
+  }
+
+  let lastError: unknown = new Error('No JSON candidates found');
+  for (const candidate of candidates) {
+    try {
+      return JSON.parse(candidate);
+    } catch (err) {
+      lastError = err;
+    }
+  }
+  throw lastError instanceof Error ? lastError : new Error(String(lastError));
+}
+
 // Custom generateObject implementation
 export async function generateObject({
   model,
@@ -130,86 +189,56 @@ export async function generateObject({
   // Parse JSON from content if needed
   let object;
   try {
-    // First try to parse as JSON directly
-    object = JSON.parse(content);
-    console.log('Successfully parsed JSON directly');
-    
-    // Handle various field name differences between OpenAI and PPQ.ai
-    if (schema?.shape?.questions && !object.questions && object.follow_up_questions) {
-      console.log('Remapping follow_up_questions to questions');
-      object.questions = object.follow_up_questions;
-    }
-    
-    // Handle other potential field mapping issues
-    if (schema?.shape?.queries && !object.queries && object.serp_queries) {
-      console.log('Remapping serp_queries to queries');
-      object.queries = object.serp_queries;
-    }
-    
-    if (schema?.shape?.learnings && !object.learnings && object.learning_points) {
-      console.log('Remapping learning_points to learnings');
-      object.learnings = object.learning_points;
-    }
-    
-    if (schema?.shape?.followUpQuestions && !object.followUpQuestions && object.follow_up_questions) {
-      console.log('Remapping follow_up_questions to followUpQuestions');
-      object.followUpQuestions = object.follow_up_questions;
-    }
-    
-    if (schema?.shape?.reportMarkdown && !object.reportMarkdown && object.report) {
-      console.log('Remapping report to reportMarkdown');
-      object.reportMarkdown = object.report;
-    }
+    object = parseLooseJson(content);
   } catch (e) {
-    // If that fails, try to extract JSON from markdown
-    const jsonMatch = content.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-    if (jsonMatch && jsonMatch[1]) {
-      try {
-        object = JSON.parse(jsonMatch[1]);
-        console.log('Successfully parsed JSON from code block');
-      } catch (e2) {
-        console.error('Failed to parse JSON from code block:', jsonMatch[1]);
-        
-        // Handle the feedback questions case that appears in the error log
-        if (schema?.shape?.questions && content.includes('1.') && content.includes('2.')) {
-          // Extract questions from numbered list
-          const questions = content.split(/\d+\.\s+/)
-            .filter(Boolean)
-            .map((q: string) => q.trim());
-          
-          console.log('Extracted questions from numbered list:', questions);
-          if (questions.length > 0) {
-            return { 
-              object: { 
-                questions 
-              } 
-            };
-          }
-        }
-        
-        console.error('Failed to parse JSON from code block, full content:', content);
-        throw new Error('Invalid JSON in code block: ' + (e2 instanceof Error ? e2.message : String(e2)));
+    // Last resort: if we were expecting questions, salvage them from prose.
+    if (schema?.shape?.questions) {
+      const numbered = content.includes('1.') && content.includes('2.')
+        ? content.split(/\d+\.\s+/).map((q: string) => q.trim()).filter(Boolean)
+        : [];
+      if (numbered.length > 0) {
+        console.log('Extracted questions from numbered list:', numbered);
+        return { object: { questions: numbered } };
       }
-    } else {
-      // Final fallback - try to make a best-effort object from the content
-      if (schema?.shape?.questions) {
-        // If we're expecting questions, try to parse them from the text
-        const lines = content.split('\n').filter((line: string) => line.trim());
-        if (lines.length > 0) {
-          console.log('Using fallback parsing for questions');
-          return { 
-            object: { 
-              questions: lines 
-            } 
-          };
-        }
+
+      const lines = content.split('\n').map((l: string) => l.trim()).filter(Boolean);
+      if (lines.length > 0) {
+        console.log('Using fallback parsing for questions');
+        return { object: { questions: lines } };
       }
-      
-      console.error('Failed to extract JSON, raw content:', content);
-      throw new Error('Could not extract JSON from response: ' + (e instanceof Error ? e.message : String(e)));
     }
+
+    console.error('Failed to extract JSON, raw content:', content);
+    throw new Error('Could not extract JSON from response: ' + (e instanceof Error ? e.message : String(e)));
   }
-  
+
+  // Handle field name differences between providers. This runs for every parse
+  // path above, not just the direct-parse one.
+  if (schema?.shape?.questions && !object.questions && object.follow_up_questions) {
+    console.log('Remapping follow_up_questions to questions');
+    object.questions = object.follow_up_questions;
+  }
+
+  if (schema?.shape?.queries && !object.queries && object.serp_queries) {
+    console.log('Remapping serp_queries to queries');
+    object.queries = object.serp_queries;
+  }
+
+  if (schema?.shape?.learnings && !object.learnings && object.learning_points) {
+    console.log('Remapping learning_points to learnings');
+    object.learnings = object.learning_points;
+  }
+
+  if (schema?.shape?.followUpQuestions && !object.followUpQuestions && object.follow_up_questions) {
+    console.log('Remapping follow_up_questions to followUpQuestions');
+    object.followUpQuestions = object.follow_up_questions;
+  }
+
+  if (schema?.shape?.reportMarkdown && !object.reportMarkdown && object.report) {
+    console.log('Remapping report to reportMarkdown');
+    object.reportMarkdown = object.report;
+  }
+
   return { object };
 }
 
